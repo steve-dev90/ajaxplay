@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>JSON GitHub Activity</title>
+</head>
+<body>
+  <div id="load-indicator">
+    <p>...loading the github goodness...</p>
+  </div>
+  <div class="container">
+    <h1>JSON Activity</h1>
+    <div id="avatar"></div>
+    <div id="username"></div>
+    <div id="real-name"></div>
+    <div id="location"></div>
+    <div id="bio"></div>
+    <div id="followers"></div>
+    <h1>Followers</h1>
+    <ul id="follower_info"></ul>
+    <form id='form' onsubmit="getGitHubData(event)">
+      <input type='text' name='name' id='form-input' placeholder='Enter git hub user name'>
+      <input type="submit" value="Submit">
+    </form>
+  </div>
+  <script src="jsonhandling.js"></script>
+</body>
+</html>
