@@ -8,7 +8,7 @@ function getNASAimages(event) {
   searchText = document.getElementById('form-input').value
   document.getElementsByClassName('image-search')[0].style.display = "none"
   document.getElementById('load-indicator').style.display = "block"
-  fetch(`https://images-api.nasa.gov/search?q=${searchText}`)
+  fetch(`https://images-api.nasa.gov/search?q=${searchText}&media_type=image`)
     .then(function(r) {
       switch (r.status) {
         case 200:
@@ -30,16 +30,28 @@ function getNASAimages(event) {
 }
 
 function showImages(results) {
-  console.log(results.collection.items[0].links[0].href)
   document.getElementsByClassName('image-search')[0].style.display = "block"
   document.getElementById('load-indicator').style.display = "none"
-  results.collection.items.map ((item) => {
-    let imageLink = document.createElement('a')
-    imageLink.setAttribute(href, item.links[0].href)
-    console.log(item.links[0].href)
+  results.collection.items.map((item) => {
+    let imageDiv = document.createElement("div")
+    let imageLink = document.createElement("img")
+    imageLink.setAttribute("src", item.links[0].href)
+    imageLink.setAttribute("onmouseover", "showCaption(event)")
+    let imageCaption = document.createElement("p")
+    let caption = document.createTextNode(item.data[0].description)
+    document.getElementById("nasa-images").appendChild(imageDiv)
+    imageDiv.appendChild(imageLink)
+    imageDiv.appendChild(imageCaption)
+    imageCaption.style.display = "none"
+    imageCaption.appendChild(caption)
   })
 
 
+}
+
+function showCaption(event) {
+  console.log(event.target)
+  event.target.style.display = "block"
 }
 // https://api.nasa.gov/planetary/apod?
 // fetchGitHubData('steve-dev90')
