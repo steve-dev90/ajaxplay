@@ -6,14 +6,12 @@ document.getElementById('load-indicator').style.display = "none"
 function getNASAimages(event, searchText = 'Apollo') {
   event.preventDefault()
   searchText = document.getElementById('form-input').value || searchText
-  fromStorage = localStorage.getItem(searchText)
-  console.log(fromStorage)
+  fromStorage = JSON.parse(localStorage.getItem(searchText))
   if (!fromStorage) {
     document.getElementById('load-indicator').style.display = "block"
     fetchResults(searchText)
   } else {
-    console.log(fromStorage)
-    showImages(fromStorage.json())
+    showImages(fromStorage)
   }
 }
 
@@ -24,31 +22,30 @@ function fetchResults(searchText) {
         case 200:
           return r.json()
         case 400:
-          console.log(r.status)
+          showError(r.status)
           break
         case 500:
-          console.log(r.status)
+          showError(r.status)
           break
       }
     })
     .then(function(j) {
       showImages(j)
       //Local storage key - value pairs must both be strings
-      localStorage.setItem(searchText,j.stringify())
-    })
-    .catch(function(j) {
-      console.log("oh no")
+      localStorage.setItem(searchText,JSON.stringify(j))
     })
 }
 
 function showError(error) {
   errorPara = document.createElement("p")
   errorMessage = document.createTextNode(`Status: ${error}`)
-  document.getElementById("nasa-images").appendChild()
+  document.getElementById("nasa-images").appendChild(errorPara)
+  errorPara.appendChild(errorMessage)
 
 }
 
 function showImages(results) {
+  clearResults()
   document.getElementsByClassName('image-search')[0].style.display = "block"
   document.getElementById('load-indicator').style.display = "none"
   results.collection.items.map((item) => {
@@ -69,8 +66,14 @@ function showImages(results) {
 
 }
 
+function clearResults() {
+  imageDivs = document.getElementById("nasa-images").getElementsByTagName("div")
+  Array.from(imageDivs).map(div => {
+    div.parentNode.removeChild(div)
+  })
+}
+
 function showCaption(event) {
-  console.log(event.target.parentNode.getElementsByTagName('p'))
   event.target.parentNode.getElementsByTagName('p')[0].style.display = "block"
 }
 
